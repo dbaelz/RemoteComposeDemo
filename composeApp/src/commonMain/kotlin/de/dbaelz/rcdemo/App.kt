@@ -1,32 +1,103 @@
 package de.dbaelz.rcdemo
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.resources.painterResource
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import de.dbaelz.rcdemo.feature.notes.NotesScreen
+import de.dbaelz.rcdemo.navigation.Screen
+import org.koin.compose.KoinApplication
+import org.koin.compose.getKoin
+import org.koin.dsl.koinConfiguration
 
-import rcdemo.composeapp.generated.resources.Res
-import rcdemo.composeapp.generated.resources.compose_multiplatform
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        Text(
-            text = "Hello, World!",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+    val navController: NavHostController = rememberNavController()
+
+
+    KoinApplication(configuration = koinConfiguration(declaration = {
+        modules(
+            appModule(
+                navController
+            )
         )
-    }
+    }), content = {
+        MaterialTheme {
+            val actionDispatcher: ActionDispatcher = getKoin().get()
+
+            val backStackEntry by navController.currentBackStackEntryAsState()
+            val currentScreen = Screen.valueOf(
+                backStackEntry?.destination?.route ?: Screen.Notes.name
+            )
+
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                topBar = {
+                    TopAppBar(
+                        title = { Text(currentScreen.title) },
+                        navigationIcon = {
+                            if (currentScreen != Screen.Notes) {
+                                IconButton(onClick = {
+                                    navController.navigateUp()
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                                        contentDescription = "Back",
+                                        tint = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                }
+                            }
+                        },
+                        actions = {
+                            currentScreen.actions.forEach { action ->
+                                IconButton(onClick = {
+                                    actionDispatcher.dispatch(action)
+                                }) {
+                                    Icon(
+                                        imageVector = action.icon,
+                                        contentDescription = action.description,
+                                        tint = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                }
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            titleContentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
+            ) { paddingValues ->
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Notes.name,
+                    modifier = Modifier.fillMaxSize().padding(paddingValues)
+                ) {
+                    composable(route = Screen.Notes.name) {
+                        NotesScreen()
+                    }
+                }
+            }
+        }
+
+    })
 }
