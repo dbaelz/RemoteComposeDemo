@@ -18,6 +18,11 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverNetty)
+
+    implementation(libs.androidx.compose.remote.core)
+    implementation(libs.androidx.compose.remote.creation.core)
+    implementation(libs.androidx.compose.remote.creation)
+
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
 }

@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -22,6 +23,12 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+
+            // TODO: Move to commonMain when KMP is supported
+            implementation(libs.androidx.compose.remote.core)
+            implementation(libs.androidx.compose.remote.player.core)
+            implementation(libs.androidx.compose.remote.player.view)
+            implementation(libs.androidx.compose.remote.tooling)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
