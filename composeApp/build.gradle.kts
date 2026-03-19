@@ -23,6 +23,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.clientAndroid)
 
             // TODO: Move to commonMain when KMP is supported
             implementation(libs.androidx.compose.remote.core)
@@ -39,6 +40,7 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.ktor.clientCore)
             implementation(projects.shared)
         }
         commonTest.dependencies {
@@ -47,6 +49,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.clientCio)
         }
     }
 }
