@@ -21,7 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import de.dbaelz.rcdemo.feature.notes.NotesScreen
+import de.dbaelz.rcdemo.feature.helloworld.HelloWorldScreen
 import de.dbaelz.rcdemo.navigation.Screen
 import org.koin.compose.KoinApplication
 import org.koin.compose.getKoin
@@ -46,7 +46,7 @@ fun App() {
 
             val backStackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = Screen.valueOf(
-                backStackEntry?.destination?.route ?: Screen.Notes.name
+                backStackEntry?.destination?.route ?: Screen.HelloWorld.name
             )
 
             Scaffold(
@@ -55,7 +55,7 @@ fun App() {
                     TopAppBar(
                         title = { Text(currentScreen.title) },
                         navigationIcon = {
-                            if (currentScreen != Screen.Notes) {
+                            if (currentScreen != Screen.HelloWorld) {
                                 IconButton(onClick = {
                                     navController.navigateUp()
                                 }) {
@@ -89,11 +89,11 @@ fun App() {
             ) { paddingValues ->
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Notes.name,
+                    startDestination = Screen.HelloWorld.name,
                     modifier = Modifier.fillMaxSize().padding(paddingValues)
                 ) {
-                    composable(route = Screen.Notes.name) {
-                        NotesScreen()
+                    composable(route = Screen.HelloWorld.name) {
+                        HelloWorldScreen()
                     }
                 }
             }

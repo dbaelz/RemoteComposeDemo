@@ -1,5 +1,6 @@
 package de.dbaelz.rcdemo
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -7,14 +8,17 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun main() {
-    embeddedServer(Netty, port = SERVER_PORT, host = SERVER_HOST, module = Application::module)
+    embeddedServer(Netty, port = SERVER_PORT, host = getServerHost(), module = Application::module)
         .start(wait = true)
 }
 
-fun Application.module() {
+fun Application.module(
+    helloWorldRemote: HelloWorldRemote = HelloWorldRemote()
+) {
     routing {
-        get("/") {
-            call.respondText("TODO: Return byte array with data")
+        get(ApiRoute.HELLO_WORLD.fullResourcePath) {
+            val bytes = helloWorldRemote()
+            call.respondBytes(bytes, contentType = ContentType.Application.OctetStream)
         }
     }
 }

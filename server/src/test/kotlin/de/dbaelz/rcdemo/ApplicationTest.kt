@@ -1,20 +1,24 @@
 package de.dbaelz.rcdemo
 
+import io.ktor.client.call.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import kotlin.test.*
+import java.util.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ApplicationTest {
-
     @Test
-    fun testRoot() = testApplication {
+    fun testHelloWorldRoute() = testApplication {
         application {
             module()
         }
-        val response = client.get("/")
+
+        val response = client.get(ApiRoute.HELLO_WORLD.fullResourcePath)
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals("TODO: Return byte array with data", response.bodyAsText())
+        val body = response.body<ByteArray>()
+        assertTrue(body.isNotEmpty())
     }
 }

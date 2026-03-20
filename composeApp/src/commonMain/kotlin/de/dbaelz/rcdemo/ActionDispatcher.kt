@@ -20,7 +20,7 @@ class DefaultActionDispatcher(
 
     override fun dispatch(action: Action) {
         when (action) {
-            is Action.NotesRefresh -> _events.tryEmit(action)
+            is Action.HelloWorldRefresh -> _events.tryEmit(action)
         }
     }
 }

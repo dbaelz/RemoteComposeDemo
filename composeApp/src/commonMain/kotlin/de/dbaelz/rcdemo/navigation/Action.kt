@@ -8,5 +8,5 @@ sealed class Action(
     val icon: ImageVector,
     val description: String
 ) {
-    data object NotesRefresh : Action(Icons.Default.Refresh, "Refresh notes")
+    data object HelloWorldRefresh : Action(Icons.Default.Refresh, "Refresh")
 }
