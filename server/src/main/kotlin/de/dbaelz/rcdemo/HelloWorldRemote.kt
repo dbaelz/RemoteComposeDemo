@@ -25,21 +25,45 @@ class HelloWorldRemote {
                 BoxLayout.CENTER,
                 BoxLayout.TOP
             ) {
-                text(writer, "Hello World", 48.dp)
+                writer.text(
+                    writer = writer,
+                    text = "Hello World!",
+                    fontSize = 42.dp
+                )
 
-                text(writer, "Call counter: ${counter++}", 24.dp)
+                writer.spacer(24.dp)
+
+                writer.text(
+                    writer = writer,
+                    text = "This Composable is generated on the server and updates with every refresh.",
+                    color = 0xFF000000L,
+                    fontSize = 22.dp
+                )
+
+                writer.spacer(16.dp)
+
+                writer.text(
+                    writer = writer,
+                    text = "Refresh counter: ${counter++}",
+                    color = 0xFF3700B3L
+                )
             }
         }
 
         return writer.encodeToByteArray()
     }
 
-    private fun text(writer: RemoteComposeWriter, text: String, fontSize: Dp) {
+    private fun RemoteComposeWriter.text(
+        writer: RemoteComposeWriter,
+        text: String,
+        color: Long = 0xFF6200EE,
+        fontSize: Dp = 22.dp
+    ) {
 
         writer.textComponent(
             RecordingModifier(),
             writer.addText(text),
-            0xFF757575L.toInt(),
+            color.toInt(),
             fontSize.value * density.density,
             0,
             400f,
@@ -48,6 +72,10 @@ class HelloWorldRemote {
             0,
             Int.MAX_VALUE
         ) {}
+    }
+
+    private fun RemoteComposeWriter.spacer(height: Dp) {
+        box(RecordingModifier().height(height.value * density.density))
     }
 
     private companion object {
